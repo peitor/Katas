@@ -4,83 +4,92 @@ using Xunit;
 
 namespace Algorithm.Test
 {    
-    public class FinderTests
-    {
-        [Fact]
-        public void Returns_Empty_Results_When_Given_Empty_List()
-        {
-            var list = new List<Thing>();
-            var finder = new Finder(list);
+	public class FinderTests
+	{
+		Person sueAge01Oldest = new Person() { Name = "Sue", BirthDate = new DateTime(1950, 1, 1) };
+		Person gregAge02 = new Person() { Name = "Greg", BirthDate = new DateTime(1952, 6, 1) };
+		Person mikeAge03 = new Person() { Name = "Mike", BirthDate = new DateTime(1979, 1, 1) };
+		Person sarahAge04Youngest = new Person() { Name = "Sarah", BirthDate = new DateTime(1982, 1, 1) };
 
-            var result = finder.Find(FT.One);
+		[Fact]
+		public void FindThrowsNullReferenceException68()
+		{
+			List<Person> list = new List<Person>(new Person[2]);
+			AgeComparer ageComparer = new AgeComparer(list);
+			Assert.Throws<NullReferenceException>(() => ageComparer.FindClosest());
+		}
+		
+		[Fact]
+		public void Returns_Empty_Results_When_Given_Empty_List()
+		{
+			var ageComparer = new AgeComparer(new List<Person>());
 
-            Assert.Null(result.P1);
-            Assert.Null(result.P2);
-        }
+			var result = ageComparer.FindClosest();
 
-        [Fact]
-        public void Returns_Empty_Results_When_Given_One_Person()
-        {
-            var list = new List<Thing>() { sue };
-            var finder = new Finder(list);
+			Assert.Null(result.Person1);
+			Assert.Null(result.Person2);
+		}
 
-            var result = finder.Find(FT.One);
+		[Fact]
+		public void Returns_Empty_Results_When_Given_One_Person()
+		{
+			var list = new List<Person>() { sueAge01Oldest };
+			var ageComparer = new AgeComparer(list);
 
-            Assert.Null(result.P1);
-            Assert.Null(result.P2);
-        }
+			var result = ageComparer.FindClosest();
 
-        [Fact]
-        public void Returns_Closest_Two_For_Two_People()
-        {
-            var list = new List<Thing>() { sue, greg };
-            var finder = new Finder(list);
+			Assert.Null(result.Person1);
+			Assert.Null(result.Person2);
+		}
 
-            var result = finder.Find(FT.One);
+		[Fact]
+		public void Returns_Closest_Two_For_Two_People()
+		{
+			var list = new List<Person>() { sueAge01Oldest, gregAge02 };
+			var ageComparer = new AgeComparer(list);
 
-            Assert.Same(sue, result.P1);
-            Assert.Same(greg, result.P2);
-        }
+			var result = ageComparer.FindClosest();
 
-        [Fact]
-        public void Returns_Furthest_Two_For_Two_People()
-        {
-            var list = new List<Thing>() { greg, mike };
-            var finder = new Finder(list);
+			Assert.Same(sueAge01Oldest, result.Person1);
+			Assert.Same(gregAge02, result.Person2);
+		}
 
-            var result = finder.Find(FT.Two);
+		[Fact]
+		public void Returns_Furthest_Two_For_Two_People()
+		{
+			var list = new List<Person>() { gregAge02, mikeAge03 };
+			var ageComparer = new AgeComparer(list);
 
-            Assert.Same(greg, result.P1);
-            Assert.Same(mike, result.P2);
-        }
+			var result = ageComparer.FindFurthest();
 
-        [Fact]
-        public void Returns_Furthest_Two_For_Four_People()
-        {
-            var list = new List<Thing>() { greg, mike, sarah, sue };
-            var finder = new Finder(list);
+			Assert.Same(gregAge02, result.Person1);
+			Assert.Same(mikeAge03, result.Person2);
+		}
 
-            var result = finder.Find(FT.Two);
+		[Fact]
+		public void Returns_Furthest_Two_For_Four_People()
+		{
+			var list = new List<Person>() { gregAge02, mikeAge03, sarahAge04Youngest, sueAge01Oldest };
+			var ageComparer = new AgeComparer(list);
 
-            Assert.Same(sue, result.P1);
-            Assert.Same(sarah, result.P2);
-        }
+			var result = ageComparer.FindFurthest();
 
-        [Fact]
-        public void Returns_Closest_Two_For_Four_People()
-        {
-            var list = new List<Thing>() { greg, mike, sarah, sue };
-            var finder = new Finder(list);
+			Assert.Same(sueAge01Oldest, result.Person1);
+			Assert.Same(sarahAge04Youngest, result.Person2);
+		}
 
-            var result = finder.Find(FT.One);
+		[Fact]
+		public void Returns_Closest_Two_For_Four_People()
+		{
+			var list = new List<Person>() { gregAge02, mikeAge03, sarahAge04Youngest, sueAge01Oldest };
+			var ageComparer = new AgeComparer(list);
 
-            Assert.Same(sue, result.P1);
-            Assert.Same(greg, result.P2);
-        }
+			var result = ageComparer.FindClosest();
 
-        Thing sue = new Thing() {Name = "Sue", BirthDate = new DateTime(1950, 1, 1)};
-        Thing greg = new Thing() {Name = "Greg", BirthDate = new DateTime(1952, 6, 1)};
-        Thing sarah = new Thing() { Name = "Sarah", BirthDate = new DateTime(1982, 1, 1) };
-        Thing mike = new Thing() { Name = "Mike", BirthDate = new DateTime(1979, 1, 1) };
-    }
+			Assert.Same(sueAge01Oldest, result.Person1);
+			Assert.Same(gregAge02, result.Person2);
+		}
+
+	  
+	}
 }
