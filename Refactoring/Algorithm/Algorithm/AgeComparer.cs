@@ -15,7 +15,7 @@ namespace Algorithm
 
 		private void GenerateCombinations()
 		{
-			if (_persons != null && _persons.Count > 1)
+			if (_persons != null && _persons.Count > 1 && PersonCombinations == null)
 			{
 				PersonCombinations = GenerateCombinations(_persons);
 			}
